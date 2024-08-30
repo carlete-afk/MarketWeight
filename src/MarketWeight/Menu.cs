@@ -5,7 +5,7 @@ class Menu
 {
     private static ConsoleKey _tecla;
     private static int _opcionActual = 0;
-    private static string[] _opciones = ["Calcular", "Salir"];
+    private static string[] _opciones = ["Registrarse", "Iniciar Sesión", "Calcular", "Salir"];
     internal static string Centrar(string text)
     {
         string[] lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
@@ -26,7 +26,6 @@ class Menu
 
     internal static ConsoleKey EscucharTeclado()
     {
-
         _tecla = Console.ReadKey(true).Key;
 
         return _tecla;
@@ -87,20 +86,27 @@ class Menu
 
         if (_tecla == ConsoleKey.Enter)
         {
-            switch(_opcionActual)
+            switch(_opciones[_opcionActual])
             {
-                case 0:
-                    MarketWeight.salir = true;
+                case "Registrarse":
+                    ImprimirRegistro();
+                break;
+
+                case "Iniciar Sesión":
+                break;
+
+                case "Calcular":
+                    MarketWeight.salirBucle = true;
                     ImprimirPedido();
                 break;
                 
-                case 1:
+                case "Salir":
                     Console.Clear();
                     Console.WriteLine("\n\n\n");
                     Console.WriteLine(Centrar("Adios!!!"));
                     Console.WriteLine(Centrar("Gracias por utilizar nuestros servicios."));
                     Console.WriteLine("\n\n\n");
-                    MarketWeight.salir = true;                
+                    MarketWeight.salirBucle = true;                
                 break;
 
                 default:
@@ -113,7 +119,7 @@ class Menu
         }
     }
 
-    internal static async void ImprimirPantallaPrincipal()
+    internal static void ImprimirPantallaPrincipal()
     {
         ImprimirTitulo();
 
@@ -165,7 +171,7 @@ class Menu
         }
 
         foreach (string x in datos)
-            Console.Write($"{x}, ");
+            Console.Write($"{x}| ");
 
         Thread.Sleep(2000);
 
@@ -180,13 +186,33 @@ class Menu
     {
         ImprimirTitulo();
 
-        MarketWeight.salir = true;        
+        MarketWeight.salirBucle = true;        
         string[] inputs = [ "Cantidad Oferta", "Cantidad Demanda", "Precio Oferta", "Precio Demanda"];
         decimal[] datos = new decimal[inputs.Length];
 
 
-        Console.Write(Centrar("Nombre del Activo/Producto:"));
+        Console.Write(Centrar("Nombre del Activo: "));
+        
         string NombreActivo = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(NombreActivo))
+        {
+            Console.Clear();
+
+                ImprimirTitulo();
+
+                Console.WriteLine("\n");
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(Centrar("Error!! Ingrese un nombre válido"));
+                ReiniciarColores();
+                Console.WriteLine(Centrar("Presiona cualquier tecla para continuar."));
+
+                Console.ReadKey();
+                ImprimirPedido();
+        }
+
+
         for (int i = 0; i < inputs.Length; i++)
         {
             try
@@ -194,13 +220,13 @@ class Menu
                 Console.Write(Centrar($"{inputs[i]}: "));
                 datos[i] = decimal.Parse(Console.ReadLine());
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 Console.Clear();
 
                 ImprimirTitulo();
 
-                System.Console.WriteLine("\n");
+                Console.WriteLine("\n");
 
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(Centrar("Error!! Ingrese un número válido"));
@@ -212,106 +238,55 @@ class Menu
             }
         } 
 
-        
-        decimal cantidadOferta = datos[0];
-        decimal cantidadDemanda = datos[1];
-        decimal precioOferta = datos[2];
-        decimal precioDemanda = datos[3];
-        
-
-        MostrarResultados(NombreActivo, cantidadOferta, cantidadDemanda, precioOferta, precioDemanda);
+        MostrarResultados(NombreActivo, datos[0], datos[1], datos[2], datos[3]);
     }
 
-    /*Metodo de calculo de propiedades*/
-
-    internal static decimal CalcularPuntoEquilibrio(decimal cantOferta, decimal cantDemanda, decimal pOferta, decimal pDemanda)
+    internal static void DireccionalidadActivo (decimal cantDemanda, decimal cantOferta)
     {
-        if ((pOferta + pDemanda) > 0)
-            return (cantDemanda - cantOferta) / (pOferta + pDemanda);
+        char x = Calculo.PropiedadMercado(cantDemanda, cantOferta);
 
-        else
+        switch(x)
         {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Red;
+            case 'a':
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(Centrar(ASCII.ActivoBaja));
+                ReiniciarColores();
+            break;
 
-            System.Console.WriteLine(Centrar("\n\n\nError en los datos! El precio de oferta y demanda tienen que ser mayores a 0."));
-            System.Console.WriteLine(Centrar("Presiona cualquier tecla para continuar\n\n\n"));
-            Console.ReadKey(true);
+            case 'b':
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(Centrar(ASCII.ActivoAlza));
+                ReiniciarColores();
+            break;
 
-            MarketWeight.salir = false;
-            MarketWeight.BuclePantallaPrincipal();
-            return 0;
-        }
-
-        return 0;
-    }
-
-    // Método para calcular oferta
-    internal static decimal CalcularOferta(decimal cantOferta, decimal pOferta, decimal puntoEquilibrio)
-    {
-        return cantOferta + (pOferta * puntoEquilibrio);
-    }
-
-    // Método para calcular demanda
-    internal static decimal CalcularDemanda(decimal cantDemanda, decimal pDemanda, decimal puntoEquilibrio)
-    {
-        return cantDemanda - (pDemanda * puntoEquilibrio);
-    }
-
-    internal static void PropiedadMercado (decimal cantDemanda, decimal cantOferta)
-    {
-        Console.WriteLine("");
-        if(cantDemanda > cantOferta)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(Centrar(ASCII.ActivoBaja));
-            ReiniciarColores();
-        }
-
-        else if(cantDemanda < cantOferta)
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(Centrar(ASCII.ActivoAlza));
-            ReiniciarColores();
-        } 
-
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(Centrar(ASCII.ActivoEquilibrio));
-            ReiniciarColores();
+            default:
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(Centrar(ASCII.ActivoEquilibrio));
+                ReiniciarColores();
+            break;
         }
     }
-
-    /*Muestra de resultados*/
 
     internal static void MostrarResultados(string NActivo, decimal cantOferta, decimal cantDemanda, decimal pOferta, decimal pDemanda)
     {
         ImprimirTitulo();
 
-        decimal puntoEquilibrio = CalcularPuntoEquilibrio(cantOferta, cantDemanda, pOferta, pDemanda);
-        decimal oferta = CalcularOferta(cantOferta, pOferta, puntoEquilibrio);
-        decimal demanda = CalcularDemanda(cantDemanda, pDemanda, puntoEquilibrio);
+        Calculo.puntoEquilibrio = Calculo.CalcularPuntoEquilibrio(cantOferta, cantDemanda, pOferta, pDemanda);
+        Calculo.oferta = Calculo.CalcularOferta(cantOferta, pOferta, Calculo.puntoEquilibrio);
+        Calculo.demanda = Calculo.CalcularDemanda(cantDemanda, pDemanda, Calculo.puntoEquilibrio);
 
         Console.WriteLine(Centrar(""));
         Console.WriteLine(Centrar($"Precio de Demanda: " + pDemanda.ToString("F2") + "     Precio de Oferta: "  + pOferta.ToString("F2")));
-        System.Console.WriteLine("");
-        Console.WriteLine(Centrar($"Cantidad de {NActivo}: " + demanda.ToString("F2") + "     Precio de Equilibrio: " + puntoEquilibrio.ToString("F2")));
-        PropiedadMercado(cantDemanda, cantOferta);
+        Console.WriteLine("");
+        Console.WriteLine(Centrar($"Cantidad de {NActivo}: " + Calculo.demanda.ToString("F2") + "     Precio de Equilibrio: " + Calculo.puntoEquilibrio.ToString("F2")));
+        DireccionalidadActivo(cantDemanda, cantOferta);
         
         Console.WriteLine("\n\n");
 
         Console.WriteLine(Centrar("Presione cualquier tecla para volver al inicio."));
 
-        if(EscucharTeclado() == ConsoleKey.Enter)
-        {
-            MarketWeight.salir = false;
-            MarketWeight.BuclePantallaPrincipal();
-        }
-        else
-        {
-            MarketWeight.salir = false;
-            MarketWeight.BuclePantallaPrincipal();
-        }
+        EscucharTeclado();
+        MarketWeight.salirBucle = false;
+        MarketWeight.BuclePantallaPrincipal();
     }
 }

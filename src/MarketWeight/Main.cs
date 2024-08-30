@@ -3,7 +3,7 @@ class MarketWeight
     public static int windowWidth = 100;
     public static int windowHeight = 40;
 
-    internal static bool salir = false;
+    internal static bool salirBucle = false;
 
     public static void BuclePantallaPrincipal()
     {
@@ -11,7 +11,7 @@ class MarketWeight
             
             Menu.ImprimirPantallaPrincipal();
 
-        } while (salir == false);
+        } while (salirBucle == false);
     }
 }
 
