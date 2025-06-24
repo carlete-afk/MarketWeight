@@ -12,10 +12,12 @@ public class RepoUsuario : RepoGenerico, IRepoUsuario
     {
     }
 
+    // -----------------------------------------------------------
+    //      AltaUsuario 
+    // -----------------------------------------------------------
 
     public void Alta(Usuario usuario)
     {
-
         var parametros = new DynamicParameters();
         parametros.Add("@xnombre", usuario.Nombre);
         parametros.Add("@xapellido", usuario.Apellido);
@@ -36,6 +38,33 @@ public class RepoUsuario : RepoGenerico, IRepoUsuario
         }
     }
 
+    public async Task AltaAsync(Usuario usuario)
+    {
+
+        var parametros = new DynamicParameters();
+        parametros.Add("@xnombre", usuario.Nombre);
+        parametros.Add("@xapellido", usuario.Apellido);
+        parametros.Add("@xemail", usuario.Email);
+        parametros.Add("@xpass", usuario.Password);
+        try
+        {
+            await Conexion.ExecuteAsync("AltaUsuario", parametros);
+        }
+        catch (DbException e)
+        {
+            //DuplicateKeyEntry   
+            if (e.ErrorCode == 1062)
+            {
+                throw new ConstraintException($"El Usuario {usuario.Nombre} ya ha sido ingresado.");
+            }
+            throw;
+        }
+    }
+
+    // -----------------------------------------------------------
+    //      ObtenerUsuario   
+    // -----------------------------------------------------------
+
     public IEnumerable<Usuario> Obtener()
     {
         var consulta = "SELECT * FROM Usuario";
@@ -43,12 +72,35 @@ public class RepoUsuario : RepoGenerico, IRepoUsuario
         return usuarios;
     }
 
+    public async Task<IEnumerable<Usuario>> ObtenerAsync()
+    {
+        var consulta = "SELECT * FROM Usuario";
+        var usuarios = await Conexion.QueryAsync<Usuario>(consulta);
+        return usuarios;
+    }
+
+    // -----------------------------------------------------------
+    //      ObtenerUsuarioMoneda     
+    // -----------------------------------------------------------
+
     public IEnumerable<UsuarioMoneda> ObtenerUsuarioMoneda()
     {
         var consulta = "SELECT * FROM UsuarioMoneda";
         var usuariosMoneda = Conexion.Query<UsuarioMoneda>(consulta);
         return usuariosMoneda;
     }
+
+    public async Task<IEnumerable<UsuarioMoneda>> ObtenerUsuarioMonedaAsync()
+    {
+        var consulta = "SELECT * FROM UsuarioMoneda";
+        var usuariosMoneda = await Conexion.QueryAsync<UsuarioMoneda>(consulta);
+        return usuariosMoneda;
+    }
+
+    // -----------------------------------------------------------
+    //      DetalleUsuario    
+    // -----------------------------------------------------------
+
 
     public Usuario? Detalle(uint indiceABuscar)
     {
@@ -58,7 +110,17 @@ public class RepoUsuario : RepoGenerico, IRepoUsuario
         return usuarios;
     }
 
-    
+    public async Task<Usuario?> DetalleAsync(uint indiceABuscar)
+    {
+        var consulta = $"SELECT * FROM Usuario WHERE idUsuario = {indiceABuscar}";
+        var usuarios = await Conexion.QueryFirstOrDefaultAsync<Usuario>(consulta);
+
+        return usuarios;
+    }
+
+    // -----------------------------------------------------------
+    //      Ingreso
+    // -----------------------------------------------------------
 
     public void Ingreso(uint idusuario, decimal saldo)
     {
@@ -69,6 +131,21 @@ public class RepoUsuario : RepoGenerico, IRepoUsuario
 
         Conexion.Execute("IngresarDinero", parametros);
     }
+
+    public async Task IngresoAsync(uint idusuario, decimal saldo)
+    {
+
+        var parametros = new DynamicParameters();
+        parametros.Add("@xidusuario", idusuario);
+        parametros.Add("@xsaldo", saldo);
+
+        await Conexion.ExecuteAsync("IngresarDinero", parametros);
+    }
+
+    // -----------------------------------------------------------
+    //      Compra
+    // -----------------------------------------------------------
+
     public void Compra(uint idusuario, decimal cantidad, uint idmoneda)
     {
 
@@ -80,19 +157,49 @@ public class RepoUsuario : RepoGenerico, IRepoUsuario
         Conexion.Execute("ComprarMoneda", parametros);
     }
 
-    public void Transferencia( uint idmoneda, decimal cantidad, uint idusuarioTransfiere, uint idusuarioTransferido){
+    public async Task CompraAsync(uint idusuario, decimal cantidad, uint idmoneda)
+    {
+
+        var parametros = new DynamicParameters();
+        parametros.Add("@xidusuario", idusuario);
+        parametros.Add("@xcantidad", cantidad);
+        parametros.Add("@xidmoneda", idmoneda);
+
+        await Conexion.ExecuteAsync("ComprarMoneda", parametros);
+    }
+
+    // -----------------------------------------------------------
+    //      Transferencia
+    // -----------------------------------------------------------
+
+    public void Transferencia(uint idmoneda, decimal cantidad, uint idusuarioTransfiere, uint idusuarioTransferido)
+    {
         var parametros = new DynamicParameters();
         parametros.Add("@xidMoneda", idmoneda);
         parametros.Add("@xcantidad", cantidad);
-        parametros.Add("@xidUsuarioTransfiere", idusuarioTransfiere); 
+        parametros.Add("@xidUsuarioTransfiere", idusuarioTransfiere);
         parametros.Add("@xidUsuarioTransferido", idusuarioTransferido);
 
         Conexion.Execute("Transferencia", parametros);
     }
 
+    public async Task TransferenciaAsync(uint idmoneda, decimal cantidad, uint idusuarioTransfiere, uint idusuarioTransferido)
+    {
+        var parametros = new DynamicParameters();
+        parametros.Add("@xidMoneda", idmoneda);
+        parametros.Add("@xcantidad", cantidad);
+        parametros.Add("@xidUsuarioTransfiere", idusuarioTransfiere);
+        parametros.Add("@xidUsuarioTransferido", idusuarioTransferido);
+
+        await Conexion.ExecuteAsync("Transferencia", parametros);
+    }
+
+    // -----------------------------------------------------------
+    //      Vender 
+    // -----------------------------------------------------------
+
     public void Vender(uint idusuario, decimal cantidad, uint idmoneda)
     {
-
         var parametros = new DynamicParameters();
         parametros.Add("@xidusuario", idusuario);
         parametros.Add("@xcantidad", cantidad);
@@ -101,42 +208,91 @@ public class RepoUsuario : RepoGenerico, IRepoUsuario
         Conexion.Execute("VenderMoneda", parametros);
     }
 
-    public IEnumerable<Usuario> ObtenerPorCondicion (string condicion)
+    public async Task VenderAsync(uint idusuario, decimal cantidad, uint idmoneda)
+    {
+
+        var parametros = new DynamicParameters();
+        parametros.Add("@xidusuario", idusuario);
+        parametros.Add("@xcantidad", cantidad);
+        parametros.Add("@xidmoneda", idmoneda);
+
+        await Conexion.ExecuteAsync("VenderMoneda", parametros);
+    }
+
+    // -----------------------------------------------------------
+    //      ObtenerPorCondicion
+    // -----------------------------------------------------------
+
+    public IEnumerable<Usuario> ObtenerPorCondicion(string condicion)
     {
         var consulta = $"SELECT U.nombre, U.saldo FROM Usuario U WHERE {condicion}";
         var usuarios = Conexion.Query<Usuario>(consulta);
         return usuarios;
     }
 
-    public IEnumerable<UsuarioMoneda> ObtenerPorCondicionUsuarioMoneda (uint? userid, decimal? cantidad)
+    public async Task<IEnumerable<Usuario>> ObtenerPorCondicionAsync(string condicion)
     {
-        var consulta = "SELECT UM.idUsuario, UM.cantidad FROM UsuarioMoneda UM WHERE";
+        var consulta = $"SELECT U.nombre, U.saldo FROM Usuario U WHERE {condicion}";
+        var usuarios = await Conexion.QueryAsync<Usuario>(consulta);
+        return usuarios;
+    }
+
+    // -----------------------------------------------------------
+    //      ObtenerPorCondicionUsuarioMoneda 
+    // -----------------------------------------------------------
+
+    public IEnumerable<UsuarioMoneda> ObtenerPorCondicionUsuarioMoneda(uint? userid, decimal? cantidad)
+    {
+        var consulta = "SELECT UM.idUsuario, UM.cantidad FROM UsuarioMoneda UM WHERE ";
         var and = false;
 
         if (userid is not null)
         {
-            if (and)
-                consulta += " AND";
-
-            consulta += $" idUsuario = {userid}";
-
+            consulta += $"idUsuario = {userid}";
             and = true;
         }
 
-        else if (cantidad is not null)
+        if (cantidad is not null)
         {
-            if (and)
-                consulta += " AND";
-                
-            consulta += $" cantidad = {cantidad}";
+            if (and) consulta += " AND ";
+            consulta += $"cantidad = {cantidad}";
         }
 
-        else
+        if (cantidad is null && userid is null)
             throw new ArgumentException($"No se pasaron parámetros.");
 
         var usuariosMonedas = Conexion.Query<UsuarioMoneda>(consulta);
         return usuariosMonedas;
     }
+
+    public async Task<IEnumerable<UsuarioMoneda>> ObtenerPorCondicionUsuarioMonedaAsync(uint? userid, decimal? cantidad)
+    {
+        var consulta = "SELECT UM.idUsuario, UM.cantidad FROM UsuarioMoneda UM WHERE ";
+        var and = false;
+
+        if (userid is not null)
+        {
+            consulta += $"idUsuario = {userid}";
+            and = true;
+        }
+
+        if (cantidad is not null)
+        {
+            if (and) consulta += " AND ";
+            consulta += $"cantidad = {cantidad}";
+        }
+
+        if (cantidad is null && userid is null)
+            throw new ArgumentException($"No se pasaron parámetros.");
+
+        var usuariosMonedas = await Conexion.QueryAsync<UsuarioMoneda>(consulta);
+        return usuariosMonedas;
+    }
+
+    // -----------------------------------------------------------
+    //      DetalleCompleto 
+    //          Datos del usuario, monedas y transacciones.
+    // -----------------------------------------------------------
 
     private static readonly string _queryDetalle = @"
             SELECT  *
@@ -160,8 +316,26 @@ public class RepoUsuario : RepoGenerico, IRepoUsuario
             var usuario = multi.ReadSingleOrDefault<Usuario>();
 
             if (usuario is not null)
+            {
                 usuario.Billetera = multi.Read<UsuarioMoneda>().ToList();
                 usuario.Transacciones = multi.Read<Historial>().ToList();
+            }
+
+            return usuario;
+        }
+    }
+    
+    public async Task<Usuario?> DetalleCompletoAsync(uint idUsuario)
+    {
+        using (var multi = Conexion.QueryMultiple(_queryDetalle, new { xidUsuario = idUsuario }))
+        {
+            var usuario = await multi.ReadSingleOrDefaultAsync<Usuario>();
+
+            if (usuario is not null)
+            {
+                usuario.Billetera = multi.ReadAsync<UsuarioMoneda>().Result.ToList();
+                usuario.Transacciones = multi.ReadAsync<Historial>().Result.ToList();
+            }
 
             return usuario;
         }

@@ -31,6 +31,10 @@ public class RepoMonedaTest : TestBase
         _repo.Alta(monedaPepe);
         _repo.Alta(monedaVirgo);
         
+        var monedas = _repo.Obtener();
+
+        Assert.NotEmpty(monedas);
+        Assert.Contains(monedas, m => m.Nombre == "pepe" || m.Nombre == "VirgoCoin");
     }
 
     [Fact]
