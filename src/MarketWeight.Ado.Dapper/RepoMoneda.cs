@@ -1,16 +1,14 @@
 using System.Data;
+using Dapper;
 using MarketWeight.Core;
 using MarketWeight.Core.Persistencia;
-using Dapper;
 using System.Data.Common;
 
 namespace MarketWeight.Ado.Dapper;
 
 public class RepoMoneda : RepoGenerico, IRepoMoneda
 {
-    public RepoMoneda(IDbConnection conexion) : base(conexion)
-    {
-    }
+    public RepoMoneda(IDbConnection conexion) : base(conexion) { }
 
     // -----------------------------------------------------------
     //      AltaMoneda
@@ -112,5 +110,51 @@ public class RepoMoneda : RepoGenerico, IRepoMoneda
         var consulta = $"SELECT * FROM Moneda WHERE {condicion}";
         var monedas = await Conexion.QueryAsync<Moneda>(consulta);
         return monedas;
+    }
+
+    // -----------------------------------------------------------
+    //      ActualizarMoneda
+    // -----------------------------------------------------------
+
+    public void Actualizar(Moneda moneda, uint id)
+    {
+        var consulta = "UPDATE Moneda SET precio = @precio, cantidad = @cantidad, nombre = @nombre WHERE idMoneda = @id;";
+        var parametros = new DynamicParameters();
+        parametros.Add("@precio", moneda.Precio);
+        parametros.Add("@cantidad", moneda.Cantidad);
+        parametros.Add("@nombre", moneda.Nombre);
+        parametros.Add("@id", id);
+
+        Conexion.Execute(consulta, parametros);
+    }
+
+    public async Task ActualizarAsync(Moneda moneda, uint id)
+    {
+        var consulta = "UPDATE Moneda SET precio = @precio, cantidad = @cantidad, nombre = @nombre WHERE idMoneda = @id;";
+        var parametros = new DynamicParameters();
+        parametros.Add("@precio", moneda.Precio);
+        parametros.Add("@cantidad", moneda.Cantidad);
+        parametros.Add("@nombre", moneda.Nombre);
+        parametros.Add("@id", id);
+
+        await Conexion.ExecuteAsync(consulta, parametros);
+    }
+
+    // -----------------------------------------------------------
+    //      EliminarMoneda
+    // -----------------------------------------------------------
+
+    public void Eliminar(uint id)
+    {
+        var consulta = $"DELETE FROM Moneda WHERE idMoneda = {id};";
+
+        Conexion.Query<Moneda>(consulta);
+    }
+
+    public async Task EliminarAsync(uint id)
+    {
+        var consulta = $" DELETE FROM Moneda WHERE idMoneda = {id};";
+
+        await Conexion.QueryAsync<Moneda>(consulta);
     }
 }

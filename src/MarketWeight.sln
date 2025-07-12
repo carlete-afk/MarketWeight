@@ -9,13 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketWeight.Ado.Dapper", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketWeight.Ado.Dapper.Test", "MarketWeight.Ado.Dapper.Test\MarketWeight.Ado.Dapper.Test.csproj", "{1E670891-17AC-4BF8-99EE-E1FC19BE0250}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketWeight.API", "MarketWeightAPI\MarketWeight.API.csproj", "{134450DF-6CE1-D703-D04C-B5CF4C7F6E4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{69B08209-E31D-49B1-9E8F-7BFAA4F90A28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -30,5 +29,15 @@ Global
 		{1E670891-17AC-4BF8-99EE-E1FC19BE0250}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E670891-17AC-4BF8-99EE-E1FC19BE0250}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E670891-17AC-4BF8-99EE-E1FC19BE0250}.Release|Any CPU.Build.0 = Release|Any CPU
+		{134450DF-6CE1-D703-D04C-B5CF4C7F6E4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{134450DF-6CE1-D703-D04C-B5CF4C7F6E4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{134450DF-6CE1-D703-D04C-B5CF4C7F6E4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{134450DF-6CE1-D703-D04C-B5CF4C7F6E4B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {980517EC-AF32-46A3-9330-718ADA4185E5}
 	EndGlobalSection
 EndGlobal
