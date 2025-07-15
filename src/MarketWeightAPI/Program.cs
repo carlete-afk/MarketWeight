@@ -16,6 +16,7 @@ builder.Services.AddScoped<IDbConnection>(sp => new MySqlConnection(connectionSt
 
 //Cada vez que necesite la interfaz, se va a instanciar automaticamente AdoDapper y se va a pasar al metodo de la API
 builder.Services.AddScoped<IRepoMoneda, RepoMoneda>();
+builder.Services.AddScoped<IRepoUsuario, RepoUsuario>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -31,7 +32,6 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-//Para un GET en la ruta "/marketweight/monedas", 
 app.MapGet("/marketweight/monedas", async (IRepoMoneda repo) =>
     await repo.ObtenerAsync());
 
@@ -73,5 +73,30 @@ app.MapDelete("/marketweight/monedas/{id}", async (uint id, IRepoMoneda repo) =>
 
     return Results.NoContent();
 });
+
+// ---------------------
+// ---------------------
+
+app.MapGet("/marketweight/usuarios", async (IRepoUsuario repo) =>
+    await repo.ObtenerAsync());
+
+app.MapGet("/marketweight/usuarios/{id}", async (uint id, IRepoUsuario repo) =>
+    await repo.DetalleAsync(id)
+        is Usuario usuario
+            ? Results.Ok(usuario)
+            : Results.NotFound());
+
+app.MapPost("/marketweight/usuarios", async (Usuario usuario, IRepoUsuario repo) =>
+{
+    await repo.AltaAsync(usuario);
+
+    return Results.Created($"/marketweight/usuarios/{usuario.Nombre}", usuario);
+});
+
+app.MapGet("/marketweight/usuarios/detalle/{id}", async (uint id, IRepoUsuario repo) =>
+    await repo.DetalleCompletoAsync(id)
+        is Usuario usuario
+            ? Results.Ok(usuario)
+            : Results.NotFound());
 
 app.Run();

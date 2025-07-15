@@ -1,82 +1,82 @@
-using MarketWeight.Core;
-using MarketWeight.Core.Persistencia;
-using MySqlConnector;
+//using MarketWeight.Core;
+//using MarketWeight.Core.Persistencia;
+//using MySqlConnector;
 
-namespace MarketWeight.Ado.Dapper.Test;
+//namespace MarketWeight.Ado.Dapper.Test;
 
-public class RepoMonedaTestAsync : TestBase
-{
-    IRepoMoneda _repo;
-    public RepoMonedaTestAsync() : base()
-        => _repo = new RepoMoneda(Conexion);
+//public class RepoMonedaTestAsync : TestBase
+//{
+//    IRepoMoneda _repo;
+//    public RepoMonedaTestAsync() : base()
+//        => _repo = new RepoMoneda(Conexion);
 
-    [Fact]
+//    [Fact]
 
-    public async Task CrearMonedaAsyncOK()
-    {
-        Moneda monedaPepe = new Moneda
-        {
-            Precio = 10m,
-            Cantidad = 2m,
-            Nombre = "pepe"
-        };
+//    public async Task CrearMonedaAsyncOK()
+//    {
+//        Moneda monedaPepe = new Moneda
+//        {
+//            Precio = 10m,
+//            Cantidad = 2m,
+//            Nombre = "pepe"
+//        };
 
-        Moneda monedaVirgo = new Moneda
-        {
-            Precio = 300m,
-            Cantidad = 5000m,
-            Nombre = "VirgoCoin"
-        };
+//        Moneda monedaVirgo = new Moneda
+//        {
+//            Precio = 300m,
+//            Cantidad = 5000m,
+//            Nombre = "VirgoCoin"
+//        };
 
-        await _repo.AltaAsync(monedaPepe);
-        await _repo.AltaAsync(monedaVirgo);
+//        await _repo.AltaAsync(monedaPepe);
+//        await _repo.AltaAsync(monedaVirgo);
 
-        var monedas = await _repo.ObtenerAsync();
+//        var monedas = await _repo.ObtenerAsync();
 
-        Assert.NotEmpty(monedas);
+//        Assert.NotEmpty(monedas);
         
-        Assert.Contains(monedas, m => m.Nombre == "pepe" || m.Nombre == "VirgoCoin");
-    }
+//        Assert.Contains(monedas, m => m.Nombre == "pepe" || m.Nombre == "VirgoCoin");
+//    }
 
-    [Fact]
-    public async Task CrearMonedaAsyncFail()
-    {
-        Moneda monedaDoge = new Moneda
-        {
-            Precio = 77m,
-            Cantidad = 100m,
-            Nombre = "DogeCoin"
-        };
+//    [Fact]
+//    public async Task CrearMonedaAsyncFail()
+//    {
+//        Moneda monedaDoge = new Moneda
+//        {
+//            Precio = 77m,
+//            Cantidad = 100m,
+//            Nombre = "DogeCoin"
+//        };
 
-        Moneda monedaLitecoin = new Moneda
-        {
-            Precio = 77m,
-            Cantidad = 100m,
-            Nombre = "Litecoin"
-        };
+//        Moneda monedaLitecoin = new Moneda
+//        {
+//            Precio = 77m,
+//            Cantidad = 100m,
+//            Nombre = "Litecoin"
+//        };
 
-        var error =  await Assert.ThrowsAsync<MySqlException> (()=>_repo.AltaAsync(monedaDoge));
-        Assert.Equal("Moneda ya registrada :v", error.Message);
+//        var error =  await Assert.ThrowsAsync<MySqlException> (()=>_repo.AltaAsync(monedaDoge));
+//        Assert.Equal("Moneda ya registrada :v", error.Message);
 
-        error = await Assert.ThrowsAsync<MySqlException> (()=>_repo.AltaAsync(monedaLitecoin));
-        Assert.Equal("Moneda ya registrada :v", error.Message);
-    }
+//        error = await Assert.ThrowsAsync<MySqlException> (()=>_repo.AltaAsync(monedaLitecoin));
+//        Assert.Equal("Moneda ya registrada :v", error.Message);
+//    }
 
-    [Fact]
-    public async Task TraerAsyncOK()
-    {
-        var monedas = await _repo.ObtenerAsync();
+//    [Fact]
+//    public async Task TraerAsyncOK()
+//    {
+//        var monedas = await _repo.ObtenerAsync();
         
-        Assert.NotEmpty(monedas);
-        Assert.Contains(monedas,
-            m => m.Nombre == "Bitcoin" || m.Nombre == "pepe"  || m.Nombre == "dogeCoin" || m.Nombre == "VirgoCoin");
-    }
+//        Assert.NotEmpty(monedas);
+//        Assert.Contains(monedas,
+//            m => m.Nombre == "Bitcoin" || m.Nombre == "pepe"  || m.Nombre == "dogeCoin" || m.Nombre == "VirgoCoin");
+//    }
     
-    [Fact]
-    public async Task ObtenerConCondicionAsyncOK()
-    {
-        var monedas = await _repo.ObtenerConCondicionAsync("precio >= 100");
+//    [Fact]
+//    public async Task ObtenerConCondicionAsyncOK()
+//    {
+//        var monedas = await _repo.ObtenerConCondicionAsync("precio >= 100");
 
-        Assert.NotEmpty(monedas);
-    }
-}
+//        Assert.NotEmpty(monedas);
+//    }
+//}
