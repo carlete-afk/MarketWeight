@@ -13,6 +13,7 @@ DROP SCHEMA IF EXISTS `5to_MarketWeight` ;
 -- Schema 5to_MarketWeight
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `5to_MarketWeight` ;
+ALTER DATABASE 5to_MarketWeight CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 USE `5to_MarketWeight` ;
 
 -- -----------------------------------------------------
