@@ -1,3 +1,4 @@
+using MarketWeight;
 using MarketWeight.Ado.Dapper;
 using MarketWeight.Core;
 using MySqlConnector;
