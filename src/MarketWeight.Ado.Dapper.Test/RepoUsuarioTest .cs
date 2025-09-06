@@ -27,13 +27,18 @@ public class RepoUsuarioTest : TestBase
     public void IngresarDineroOK()
     {
         _repo.Ingreso(1, 7707m);
-
         _repo.Ingreso(2, 420m);
-
         _repo.Ingreso(3, 5000m);
-
         _repo.Ingreso(4, 6666m);
-
+        
+        var usuario1 = _repo.Detalle(1);
+        var usuario2 = _repo.Detalle(2);
+        var usuario3 = _repo.Detalle(3);
+        var usuario4 = _repo.Detalle(4);
+        Assert.True(usuario1 != null && usuario1.Saldo >= 7707m);
+        Assert.True(usuario2 != null && usuario2.Saldo >= 420m);
+        Assert.True(usuario3 != null && usuario3.Saldo >= 5000m);
+        Assert.True(usuario4 != null && usuario4.Saldo >= 6666m);
     }
 
     [Fact]
@@ -70,22 +75,30 @@ public class RepoUsuarioTest : TestBase
             Email = "carloselbello@gmail.com",
             Password = "carlos123"
         };
-
-
         _repo.Alta(usuarioWalter);
         _repo.Alta(usuarioJorge);
         _repo.Alta(usuarioGuido);
         _repo.Alta(usuarioCarlos);
+
+        var usuarios = _repo.Obtener();
+        
+        Assert.Contains(usuarios, u => u.Email == "waltercoocker@gmail.com");
+        Assert.Contains(usuarios, u => u.Email == "JorgeCasco@gmail.com");
+        Assert.Contains(usuarios, u => u.Email == "guidopepin@gmail.com");
+        Assert.Contains(usuarios, u => u.Email == "carloselbello@gmail.com");
     }
 
     [Fact]
     public void ComprarMonedaOK()
     {
         _repo.Compra(3, 0.5m, 2);
-
         _repo.Compra(2, 1m, 3);
-
         _repo.Compra(2, 0.5m, 1);
+        
+        var monedasUsuario3 = _repo.ObtenerPorCondicionUsuarioMoneda(3, null);
+        var monedasUsuario2 = _repo.ObtenerPorCondicionUsuarioMoneda(2, null);
+        Assert.NotEmpty(monedasUsuario3);
+        Assert.NotEmpty(monedasUsuario2);
     }
 
     [Fact]
@@ -99,6 +112,8 @@ public class RepoUsuarioTest : TestBase
     public void VenderMonedaOK()
     {
         _repo.Vender(2, 0.1m, 1);
+        var monedasUsuario2 = _repo.ObtenerPorCondicionUsuarioMoneda(2, null);
+        Assert.NotNull(monedasUsuario2);
     }
 
     [Fact]
