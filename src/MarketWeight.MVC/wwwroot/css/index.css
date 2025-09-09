@@ -1,0 +1,31 @@
+table {
+    width: 80%;
+    margin: 40px auto;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    background: #f9f9f9;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+thead th {
+    background: #213863;
+    color: #fff;
+    padding: 12px 8px;
+    font-size: 1.1em;
+    border-bottom: 2px solid #0d182a;
+    text-align: left;
+}
+
+tbody td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+tbody tr:nth-child(even) {
+    background: #eef3fa;
+}
+
+tbody tr:hover {
+    background: #d6e4ff;
+    transition: background 0.2s;
+}

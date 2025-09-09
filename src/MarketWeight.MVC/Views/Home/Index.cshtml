@@ -1,0 +1,18 @@
+﻿@using MarketWeight.Core
+@model IEnumerable<MarketWeight.Core.Moneda>
+
+<table>
+    <thead>
+        <tr><th>Nombre</th><th>Precio</th><th>Cantidad</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var moneda in Model)
+        {
+            <tr>
+                <td>@moneda.Nombre</td>
+                <td>@moneda.Precio.ToString("N2")</td>
+                <td>@moneda.Cantidad.ToString("N2")</td>
+            </tr>
+        }
+    </tbody>
+</table>
