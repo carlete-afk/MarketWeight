@@ -1,4 +1,4 @@
-USE 5to_MarketWeight
+USE MarketWeight
 DELIMITER $$
 DROP FUNCTION IF EXISTS PrecioCompra $$
 CREATE FUNCTION `PrecioCompra`(xcantidad DECIMAL(20,10), xidmoneda INT UNSIGNED) RETURNS DECIMAL(20,10)

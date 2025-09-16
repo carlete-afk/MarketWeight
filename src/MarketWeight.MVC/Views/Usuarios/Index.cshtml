@@ -1,0 +1,20 @@
+﻿@using MarketWeight.Core
+@model IEnumerable<MarketWeight.Core.Usuario>
+
+<h1>Tabla de Usuarios</h1>
+<table class="datos">
+    <thead>
+        <tr><th>Nombre</th><th>Apellido</th><th>Email</th><th>Saldo</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var Usuario in Model)
+        {
+            <tr>
+                <td>@Usuario.Nombre</td>
+                <td>@Usuario.Apellido</td>
+                <td>@Usuario.Email</td>
+                <td>@Usuario.Saldo.ToString("N2")</td>
+            </tr>
+        }
+    </tbody>
+</table>

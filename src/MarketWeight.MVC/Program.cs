@@ -10,9 +10,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IDbConnection>(sp => new MySqlConnection(connectionString));
 builder.Services.AddScoped<IRepoMoneda, RepoMoneda>();
+builder.Services.AddScoped<IRepoUsuario, RepoUsuario>();
 
 var app = builder.Build();
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -1,18 +1,21 @@
-﻿@using MarketWeight.Core
-@model IEnumerable<MarketWeight.Core.Moneda>
+@{
+    ViewData["Title"] = "Inicio";
+}
 
-<table>
-    <thead>
-        <tr><th>Nombre</th><th>Precio</th><th>Cantidad</th></tr>
-    </thead>
-    <tbody>
-        @foreach (var moneda in Model)
-        {
-            <tr>
-                <td>@moneda.Nombre</td>
-                <td>@moneda.Precio.ToString("N2")</td>
-                <td>@moneda.Cantidad.ToString("N2")</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<link rel="stylesheet" href="~/css/inicio.css" />
+
+<div class="inicio-container">
+    <h1>MarketWeight</h1>
+    <p class="bienvenida">¡Bienvenido/a!</p>
+    <p class="descripcion">
+        Este proyecto te permite gestionar los usuarios y criptomonedas de MarketWeight desde una vista de navegador.
+    </p>
+    <div class="botones-menu">
+        <button onclick="location.href='@Url.Action("Index", "Usuarios")'" class="btn-menu">
+            Usuarios
+        </button>
+        <button onclick="location.href='@Url.Action("Index", "Monedas")'" class="btn-menu">
+            Monedas
+        </button>
+    </div>
+</div>

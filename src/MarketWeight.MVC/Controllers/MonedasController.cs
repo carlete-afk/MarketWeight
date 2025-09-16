@@ -4,19 +4,21 @@ using MarketWeight.MVC.Models;
 using MarketWeight.Core;
 using MarketWeight.Ado.Dapper;
 using MarketWeight.Core.Persistencia;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace MarketWeight.MVC.Controllers;
 
-public class HomeController : Controller
+public class MonedasController : Controller
 {
-
     private IRepoMoneda _repoMoneda;
 
-    public HomeController(IRepoMoneda repoMoneda)
+    public MonedasController(IRepoMoneda repoMoneda)
     {
         _repoMoneda = repoMoneda;
     }   
 
-    public IActionResult Index() => View();
+    public async Task<IActionResult> Index()
+    {
+        var monedas = await _repoMoneda.ObtenerAsync();
+        return View(monedas);
+    }
 }

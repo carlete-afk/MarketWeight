@@ -1,4 +1,4 @@
-USE 5to_MarketWeight;
+USE MarketWeight;
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS AltaCriptoMoneda $$
