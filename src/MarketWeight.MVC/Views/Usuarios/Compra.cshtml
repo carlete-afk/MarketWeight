@@ -1,0 +1,30 @@
+@model IEnumerable<MarketWeight.Core.Moneda>
+
+@{
+    ViewData["Title"] = "Compra de monedas";
+}
+
+<div class="compra-container">
+    <h1>Compra de monedas</h1>
+    <form asp-action="Compra" method="post" class="form-compra">
+        <div class="form-group">
+            <label for="idusuario">ID Usuario</label>
+            <input type="number" id="idusuario" name="idusuario" required class="form-control" placeholder="ejemplo@correo.com" />
+        </div>
+        <div class="form-group">
+            <label for="moneda">Moneda</label>
+            <select id="idmoneda" name="idmoneda" required class="form-control">
+                <option value="">Seleccione una moneda</option>
+                @foreach (var moneda in Model)
+                {
+                    <option value="@moneda.IdMoneda">@moneda.Nombre</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="cantidad">Cantidad</label>
+            <input type="number" id="cantidad" name="cantidad" required class="form-control" placeholder="Cantidad a comprar" />
+        </div>
+        <button type="submit" class="btn-compra">Comprar</button>
+    </form>
+</div>

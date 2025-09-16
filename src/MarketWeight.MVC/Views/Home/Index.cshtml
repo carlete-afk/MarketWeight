@@ -2,8 +2,6 @@
     ViewData["Title"] = "Inicio";
 }
 
-<link rel="stylesheet" href="~/css/inicio.css" />
-
 <div class="inicio-container">
     <h1>MarketWeight</h1>
     <p class="bienvenida">¡Bienvenido/a!</p>
@@ -15,7 +13,10 @@
             Usuarios
         </button>
         <button onclick="location.href='@Url.Action("Index", "Monedas")'" class="btn-menu">
-            Monedas
+            Criptos
+        </button>
+        <button onclick="location.href='@Url.Action("Compra", "Usuarios")'" class="btn-menu">
+            Comprar Criptos
         </button>
     </div>
 </div>

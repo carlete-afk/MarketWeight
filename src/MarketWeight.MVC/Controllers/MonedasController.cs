@@ -14,7 +14,7 @@ public class MonedasController : Controller
     public MonedasController(IRepoMoneda repoMoneda)
     {
         _repoMoneda = repoMoneda;
-    }   
+    }
 
     public async Task<IActionResult> Index()
     {
