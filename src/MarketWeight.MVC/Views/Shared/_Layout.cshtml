@@ -28,7 +28,19 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
                         </li>
-                    </ul>       
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Compra">Comprar</a>
+                        </li>
+                    </ul>
+                    
+                    <ul class="navbar-nav" id="authLinks">
+                        @* <li class="nav-item me-2">
+                            <a class="btn btn-outline-primary" asp-area="" asp-controller="Cuenta" asp-action="Registro">Registrate</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-primary" asp-area="" asp-controller="Cuenta" asp-action="Login">Inica Sesión</a>
+                        </li> *@
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -37,11 +49,20 @@
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
-    </div>
+        </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    
+    @if (TempData["CurrentUser"] != null)
+    {
+        <script>
+            window.currentUser = @Html.Raw(Json.Serialize(TempData["CurrentUser"]));
+        </script>
+    }
+    
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/navbar-auth-buttons.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

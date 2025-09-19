@@ -2,6 +2,7 @@ using System.Data;
 using MySqlConnector;
 using MarketWeight.Ado.Dapper;
 using MarketWeight.Core.Persistencia;
+using MarketWeight.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
