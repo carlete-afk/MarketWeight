@@ -138,7 +138,6 @@ public class RepoUsuario : RepoGenerico, IRepoUsuario
         var parametros = new DynamicParameters();
         parametros.Add("@xidusuario", idusuario);
         parametros.Add("@xsaldo", saldo);
-
         await Conexion.ExecuteAsync("IngresarDinero", parametros);
     }
 
@@ -225,16 +224,48 @@ public class RepoUsuario : RepoGenerico, IRepoUsuario
 
     public IEnumerable<Usuario> ObtenerPorCondicion(string condicion)
     {
-        var consulta = $"SELECT U.nombre, U.saldo FROM Usuario U WHERE {condicion}";
+        var consulta = $"SELECT * FROM Usuario WHERE {condicion}";
         var usuarios = Conexion.Query<Usuario>(consulta);
         return usuarios;
     }
 
     public async Task<IEnumerable<Usuario>> ObtenerPorCondicionAsync(string condicion)
     {
-        var consulta = $"SELECT U.nombre, U.saldo FROM Usuario U WHERE {condicion}";
+        var consulta = $"SELECT * FROM Usuario WHERE {condicion}";
         var usuarios = await Conexion.QueryAsync<Usuario>(consulta);
         return usuarios;
+    }
+
+     // -----------------------------------------------------------
+    //      ObtenerPorEmail
+    // -----------------------------------------------------------
+
+    public IEnumerable<Usuario> ObtenerPorEmail(string email)
+    {
+        const string consulta = "SELECT * FROM Usuario WHERE email = @xemail";
+        var parametros = new DynamicParameters();
+        parametros.Add("@xemail", email);
+        
+        return Conexion.Query<Usuario>(consulta, parametros);
+    }
+
+    public async Task<IEnumerable<Usuario>> ObtenerPorEmailAsync(string email)
+    {
+        const string consulta = @"
+            SELECT 
+                idUsuario,
+                nombre as Nombre,
+                apellido as Apellido,
+                email as Email,
+                pass as Password,
+                saldo as Saldo
+            FROM Usuario 
+            WHERE email = @xemail";
+            
+        var parametros = new DynamicParameters();
+        parametros.Add("@xemail", email);
+        
+        return await Conexion.QueryAsync<Usuario>(consulta, parametros);
     }
 
     // -----------------------------------------------------------
@@ -243,7 +274,7 @@ public class RepoUsuario : RepoGenerico, IRepoUsuario
 
     public IEnumerable<UsuarioMoneda> ObtenerPorCondicionUsuarioMoneda(uint? userid, decimal? cantidad)
     {
-        var consulta = "SELECT UM.idUsuario, UM.cantidad FROM UsuarioMoneda UM WHERE ";
+        var consulta = "SELECT * FROM UsuarioMoneda UM WHERE ";
         var and = false;
 
         if (userid is not null)
@@ -267,7 +298,7 @@ public class RepoUsuario : RepoGenerico, IRepoUsuario
 
     public async Task<IEnumerable<UsuarioMoneda>> ObtenerPorCondicionUsuarioMonedaAsync(uint? userid, decimal? cantidad)
     {
-        var consulta = "SELECT UM.idUsuario, UM.cantidad FROM UsuarioMoneda UM WHERE ";
+        var consulta = "SELECT * FROM UsuarioMoneda UM WHERE ";
         var and = false;
 
         if (userid is not null)

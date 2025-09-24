@@ -5,6 +5,7 @@ using MarketWeight.Core;
 using MarketWeight.Ado.Dapper;
 using MarketWeight.Core.Persistencia;
 using System.Reflection.Metadata;
+using MarketWeight.MVC.ViewModels.Cuenta;
 
 namespace MarketWeight.MVC.Controllers;
 
@@ -34,10 +35,52 @@ public class UsuariosController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Compra(uint idusuario, decimal cantidad, uint idmoneda)
+    public async Task<IActionResult> Compra(decimal cantidad, uint idmoneda)
     {
-        await _repoUsuario.CompraAsync(idusuario, cantidad, idmoneda);
-        ViewBag.Mensaje = "Compra realizada correctamente.";
-        return RedirectToAction("Index", "Home");
+        if (LoginViewModel.CurrentUser == null)
+        {
+            return RedirectToAction("Login", "Cuenta");
+        }
+
+        uint idusuario = LoginViewModel.CurrentUser.IdUsuario;
+
+        try
+        {
+            await _repoUsuario.CompraAsync(idusuario, cantidad, idmoneda);
+            TempData["ErrorMessage"] = "Compra realizada correctamente.";
+            return RedirectToAction("Index", "Home");
+        }
+        catch (MySqlConnector.MySqlException ex) when (ex.Message.Contains("Saldo Insuficiente"))
+        {
+            TempData["ErrorMessage"] = "No tienes suficiente saldo para realizar esta compra.";
+            return RedirectToAction("Compra");
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.";
+            return RedirectToAction("Compra");
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Deposito(decimal monto)
+    {
+        if (LoginViewModel.CurrentUser == null)
+            return RedirectToAction("Login", "Cuenta");
+
+        uint idusuario = LoginViewModel.CurrentUser.IdUsuario;
+
+        try
+        {
+            await _repoUsuario.IngresoAsync(idusuario, monto);
+            TempData["ErrorMessage"] = "Deposito realizado correctamente.";
+            return RedirectToAction("Perfil", "Cuenta");
+        }
+
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.\n" + ex.Message;
+            return RedirectToAction("Perfil", "Cuenta");
+        }
     }
 }

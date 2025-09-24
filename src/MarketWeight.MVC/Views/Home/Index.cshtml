@@ -2,21 +2,8 @@
     ViewData["Title"] = "Inicio";
 }
 
-<div class="inicio-container">
-    <h1>MarketWeight</h1>
-    <p class="bienvenida">¡Bienvenido/a!</p>
-    <p class="descripcion">
-        Este proyecto te permite gestionar los usuarios y criptomonedas de MarketWeight desde una vista de navegador.
-    </p>
-    <div class="botones-menu">
-        <button onclick="location.href='@Url.Action("Index", "Usuarios")'" class="btn-menu">
-            Usuarios
-        </button>
-        <button onclick="location.href='@Url.Action("Index", "Monedas")'" class="btn-menu">
-            Criptos
-        </button>
-        <button onclick="location.href='@Url.Action("Compra", "Usuarios")'" class="btn-menu">
-            Comprar Criptos
-        </button>
-    </div>
+<div class="container">
+    <h1 class="title">MarketWeight</h1>
+    <p>¡Bienvenido/a!</p>
+    <p>Este proyecto te permite gestionar los usuarios y criptomonedas de MarketWeight desde una vista de navegador.</p>
 </div>

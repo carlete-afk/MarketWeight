@@ -4,21 +4,23 @@
     ViewData["Title"] = "Usuarios";
 }
 
-<h1>Tabla de Usuarios</h1>
-<table class="datos">
-    <thead>
-        <tr><th>ID</th><th>Nombre</th><th>Apellido</th><th>Email</th><th>Saldo</th></tr>
-    </thead>
-    <tbody>
-        @foreach (var Usuario in Model)
-        {
-            <tr>
-                <td>@Usuario.IdUsuario</td>
-                <td>@Usuario.Nombre</td>
-                <td>@Usuario.Apellido</td>
-                <td>@Usuario.Email</td>
-                <td>@Usuario.Saldo.ToString("N2")</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="container">
+    <h1 class="title">Tabla de Usuarios</h1>
+    <table class="datos">
+        <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Apellido</th><th>Email</th><th>Saldo</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var Usuario in Model)
+            {
+                <tr>
+                    <td>@Usuario.IdUsuario</td>
+                    <td>@Usuario.Nombre</td>
+                    <td>@Usuario.Apellido</td>
+                    <td>@Usuario.Email</td>
+                    <td>@Usuario.Saldo.ToString("N2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

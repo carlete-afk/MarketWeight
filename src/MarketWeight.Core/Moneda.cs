@@ -7,6 +7,7 @@ namespace MarketWeight.Core
         public required decimal Precio { get; set; }
         public required decimal Cantidad { get; set; }
         public required string Nombre { get; set; }
+        public required string Img { get; set; }
     }
 }
 

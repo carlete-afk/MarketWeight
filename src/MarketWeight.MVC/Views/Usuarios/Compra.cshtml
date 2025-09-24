@@ -1,30 +1,48 @@
+@using MarketWeight.MVC.ViewModels.Cuenta
+
 @model IEnumerable<MarketWeight.Core.Moneda>
 
 @{
     ViewData["Title"] = "Compra de monedas";
 }
 
-<div class="compra-container">
-    <h1>Compra de monedas</h1>
-    <form asp-action="Compra" method="post" class="form-compra">
-        <div class="form-group">
-            <label for="idusuario">ID Usuario</label>
-            <input type="number" id="idusuario" name="idusuario" required class="form-control" placeholder="ejemplo@correo.com" />
-        </div>
-        <div class="form-group">
-            <label for="moneda">Moneda</label>
-            <select id="idmoneda" name="idmoneda" required class="form-control">
-                <option value="">Seleccione una moneda</option>
-                @foreach (var moneda in Model)
-                {
-                    <option value="@moneda.IdMoneda">@moneda.Nombre</option>
-                }
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="cantidad">Cantidad</label>
-            <input type="number" id="cantidad" name="cantidad" required class="form-control" placeholder="Cantidad a comprar" />
-        </div>
-        <button type="submit" class="btn-compra">Comprar</button>
-    </form>
+<div style="width: 100%; display: flex; flex-direction: row; align-items: center; gap: 20px;">
+    <div class="container" >
+        <h1 class="title">Compra de monedas</h1>
+        <form asp-action="Compra" method="post" class="form">
+            <input type="hidden" id="idusuario" name="idusuario" value="@LoginViewModel.CurrentUser.IdUsuario" />
+            <div class="form-group">
+                <label for="moneda" class="label">Moneda</label>
+                <select id="idmoneda" name="idmoneda" required class="input" onchange="updateImage()">
+                    <option value="">Seleccione una moneda</option>
+                    @foreach (var moneda in Model)
+                    {
+                        <option value="@moneda.IdMoneda" data-img="@moneda.Img">@moneda.Nombre</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cantidad" class="label">Cantidad</label>
+                <input type="number" id="cantidad" name="cantidad" required class="input" placeholder="Cantidad a comprar" />
+            </div>
+            
+            <button type="submit" class="btn">Comprar</button>
+        </form>
+    </div>
+
+    <div class="form-group" id="cripto-img">
+        <img id="monedaImg" src="" alt="Imagen de la moneda" style="max-width: 200px; display: none;"/>
+    </div>
 </div>
+
+<script>
+    function updateImage() {
+        const select = document.getElementById('idmoneda');
+        const selectedOption = select.options[select.selectedIndex];
+        const imgSrc = selectedOption.getAttribute('data-img');
+        const imgElement = document.getElementById('monedaImg');
+        imgElement.src = imgSrc || '';
+        console.log("Selected image URL:", imgSrc);
+        imgElement.style.display = imgSrc ? 'block' : 'none';
+    }
+</script>

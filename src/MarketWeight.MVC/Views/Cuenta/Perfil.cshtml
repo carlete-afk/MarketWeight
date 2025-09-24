@@ -1,0 +1,33 @@
+@using MarketWeight.MVC.ViewModels.Cuenta
+
+@{
+    ViewData["Title"] = "Perfil de Usuario";
+}
+
+<div class="container" style="width: 100vw;">
+    <h1 class="title">Perfil de Usuario</h1>
+
+    <div class="form-group" style="margin-bottom: 30px;" style="width: 100%">
+        <h2>Bienvenido/a, @LoginViewModel.CurrentUser?.Nombre @LoginViewModel.CurrentUser?.Apellido</h2>
+        <p><strong>Saldo:</strong> $@LoginViewModel.CurrentUser?.Saldo.ToString("N2")</p>
+    </div>
+
+    <div class="form-group" style="margin-bottom: 50px;" style="width: 100%">
+        <h3>Ingresar monto</h3>
+        <form method="post" action="/Usuarios/Deposito" class="form">
+            <input type="hidden" name="idUsuario" value="@LoginViewModel.CurrentUser?.IdUsuario" />
+            <div class="form-group">
+                <label for="monto" class="label">Monto</label>
+                <input type="number" id="monto" name="monto" required class="input" placeholder="Ingrese el monto" style="max-width: 300px;" />
+            </div>
+            <button type="submit" class="btn">Ingresar</button>
+            
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+        </form>
+    </div>
+</div>

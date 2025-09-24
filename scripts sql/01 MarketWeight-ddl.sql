@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS `Moneda` (
   `precio` DECIMAL(20,10) NOT NULL,
   `cantidad` DECIMAL(20,10) UNSIGNED NOT NULL,
   `nombre` VARCHAR(45) NOT NULL,
+  `img` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idMoneda`),
   UNIQUE INDEX `idMoneda_UNIQUE` (`idMoneda` ASC) VISIBLE)
 ENGINE = InnoDB;

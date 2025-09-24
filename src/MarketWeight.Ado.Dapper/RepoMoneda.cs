@@ -20,6 +20,7 @@ public class RepoMoneda : RepoGenerico, IRepoMoneda
         parametros.Add("@xprecio", moneda.Precio);
         parametros.Add("@xcantidad", moneda.Cantidad);
         parametros.Add("@xnombre", moneda.Nombre);
+        parametros.Add("@ximg", moneda.Img);
 
         try
         {
@@ -42,6 +43,7 @@ public class RepoMoneda : RepoGenerico, IRepoMoneda
         parametros.Add("@xprecio", moneda.Precio);
         parametros.Add("@xcantidad", moneda.Cantidad);
         parametros.Add("@xnombre", moneda.Nombre);
+        parametros.Add("@ximg", moneda.Img);
 
         try
         {

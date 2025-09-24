@@ -5,7 +5,7 @@ using MarketWeight.Core;
 using MarketWeight.Ado.Dapper;
 using MarketWeight.Core.Persistencia;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using MarketWeight.MVC.ViewModels.Account;
+using MarketWeight.MVC.ViewModels.Cuenta;
 
 namespace MarketWeight.MVC.Controllers;
 
@@ -22,20 +22,16 @@ public class CuentaController : Controller
     [HttpGet]
     public IActionResult Login() => View();
 
+    [HttpGet]
     public IActionResult Registro() => View();
 
-    public IActionResult Logout()
-    {
-        // Limpiar datos de sesión
-        LoginViewModel.CurrentUser = null;
-        TempData["CurrentUser"] = null;
-        return RedirectToAction("Index", "Home");
-    }
+    [HttpGet]
+    public IActionResult Perfil() => View();
 
     [HttpPost]
     public async Task<IActionResult> Login(string email, string password)
     {
-        var usuario = (await _repoUsuario.ObtenerPorCondicionAsync($"email = '{email}'")).FirstOrDefault();
+        var usuario = (await _repoUsuario.ObtenerPorEmailAsync(email)).FirstOrDefault();
 
         if (usuario != null)
         {
@@ -44,41 +40,67 @@ public class CuentaController : Controller
             {
                 var bytes = System.Text.Encoding.UTF8.GetBytes(password);
                 var hash = sha256.ComputeHash(bytes);
-                // Convertir a string hexadecimal en minúsculas para coincidir con MySQL SHA2
                 var hashedPassword = BitConverter.ToString(hash).Replace("-", "").ToLower();
-
-                // Debug info
-                TempData["Debug"] = new
-                {
-                    inputPassword = password,
-                    hashedInput = hashedPassword,
-                    storedHash = usuario.Password
-                };
 
                 if (usuario.Password == hashedPassword)
                 {
                     LoginViewModel.CurrentUser = usuario;
 
-                    TempData["CurrentUser"] = new
-                    {
-                        id = usuario.IdUsuario,
-                        nombre = usuario.Nombre,
-                        email = usuario.Email,
-                        debug = TempData["Debug"]  // Incluir info de debug
-                    }; return RedirectToAction("Index", "Home");
+                    TempData["CurrentUserId"] = usuario.IdUsuario.ToString();
+
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    ViewBag.Mensaje = "Contraseña incorrecta.";
-                    return RedirectToAction("Index", "Usuarios");
+                    TempData["ErrorMessage"] = $"Contraseña incorrecta.";
+                    return RedirectToAction("Login");
                 }
             }
-
         }
         else
         {
-            ViewBag.Mensaje = "Este email no está registrado.";
-            return RedirectToAction("Index", "Monedas");
+            TempData["ErrorMessage"] = "Este email no está registrado.";
+            return RedirectToAction("Login");
         }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Registro(string nombre, string apellido, string email, string pass, string confirmPass)
+    {
+        if (pass != confirmPass)
+        {
+            TempData["ErrorMessage"] = "Las contraseñas no coinciden.";
+            return RedirectToAction("Registro", "Cuenta");
+        }
+
+        var usuarioExistente = (await _repoUsuario.ObtenerPorEmailAsync(email)).FirstOrDefault();
+        if (usuarioExistente != null)
+        {
+            TempData["ErrorMessage"] = "Este email ya está registrado.";
+            return RedirectToAction("Registro", "Cuenta");
+        }
+
+        var nuevoUsuario = new Usuario
+        {
+            Nombre = nombre,
+            Apellido = apellido,
+            Email = email,
+            Password = pass,
+            Saldo = 0
+        };
+
+        await _repoUsuario.AltaAsync(nuevoUsuario);
+
+        await Login(email, pass);
+
+        return RedirectToAction("Index", "Home");
+    }
+
+    [HttpPost]
+    public IActionResult Logout()
+    {
+        LoginViewModel.CurrentUser = null;
+        TempData["CurrentUserId"] = null;
+        return RedirectToAction("Index", "Home");
     }
 }

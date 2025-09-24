@@ -20,6 +20,9 @@ public interface IRepoUsuario :
     public IEnumerable<Usuario> ObtenerPorCondicion(string condicion);
     public Task<IEnumerable<Usuario>> ObtenerPorCondicionAsync(string condicion);
 
+    public IEnumerable<Usuario> ObtenerPorEmail(string email);
+    public Task<IEnumerable<Usuario>> ObtenerPorEmailAsync(string email);
+
     public IEnumerable<UsuarioMoneda> ObtenerUsuarioMoneda();
     public Task<IEnumerable<UsuarioMoneda>> ObtenerUsuarioMonedaAsync();
 

@@ -1,11 +1,15 @@
 using MarketWeight.Core;
+using MarketWeight.Core.Persistencia;
 
-namespace MarketWeight.MVC.ViewModels.Account;
+namespace MarketWeight.MVC.ViewModels.Cuenta;
 
-public class LoginViewModel(string email, string password)
+public class LoginViewModel
 {
-    public string Email { get; set; } = email;
-    public string Password { get; set; } = password;
-
     public static Usuario? CurrentUser { get; set; }
+    private static IRepoUsuario _repoUsuario;
+
+    public static void Initialize(IRepoUsuario repoUsuario)
+    {
+        _repoUsuario = repoUsuario;
+    }
 }
