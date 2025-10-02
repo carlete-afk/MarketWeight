@@ -7,7 +7,7 @@
 
 **Asignatura**: Administracion y Gestion de Base de Datos
 
-**Curso**: 5° 8°
+**Curso**: 6° 8°
 
 # MarketWeight
 
