@@ -6,6 +6,7 @@ using MarketWeight.Ado.Dapper;
 using MarketWeight.Core.Persistencia;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using MarketWeight.MVC.ViewModels.Cuenta;
+using Microsoft.AspNetCore.Http;
 
 namespace MarketWeight.MVC.Controllers;
 
@@ -35,7 +36,7 @@ public class CuentaController : Controller
 
         if (usuario != null)
         {
-            // Usar SHA256 exactamente como el trigger MySQL SHA2(pass, 256)
+            // Se usa SHA256 exactamente como el trigger MySQL
             using (var sha256 = System.Security.Cryptography.SHA256.Create())
             {
                 var bytes = System.Text.Encoding.UTF8.GetBytes(password);
@@ -45,8 +46,16 @@ public class CuentaController : Controller
                 if (usuario.Password == hashedPassword)
                 {
                     LoginViewModel.CurrentUser = usuario;
-
-                    TempData["CurrentUserId"] = usuario.IdUsuario.ToString();
+                    var cookieOptions = new CookieOptions
+                    {
+                        HttpOnly = true,
+                        IsEssential = true,
+#if !DEBUG
+                        Secure = true,
+#endif
+                        Expires = DateTimeOffset.UtcNow.AddHours(12)
+                    };
+                    Response.Cookies.Append("CurrentUserId", usuario.IdUsuario.ToString(), cookieOptions);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -100,7 +109,7 @@ public class CuentaController : Controller
     public IActionResult Logout()
     {
         LoginViewModel.CurrentUser = null;
-        TempData["CurrentUserId"] = null;
+        Response.Cookies.Delete("CurrentUserId");
         return RedirectToAction("Index", "Home");
     }
 }

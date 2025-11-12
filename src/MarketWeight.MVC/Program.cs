@@ -2,7 +2,7 @@ using System.Data;
 using MySqlConnector;
 using MarketWeight.Ado.Dapper;
 using MarketWeight.Core.Persistencia;
-using MarketWeight.Core;
+using MarketWeight.MVC.ViewModels.Cuenta;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -27,6 +27,28 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Cookies.TryGetValue("CurrentUserId", out var userIdValue)
+        && uint.TryParse(userIdValue, out var userId))
+    {
+        var repoUsuario = context.RequestServices.GetRequiredService<IRepoUsuario>();
+        LoginViewModel.CurrentUser =
+            await repoUsuario.DetalleCompletoAsync(userId);
+
+        var repoMoneda = context.RequestServices.GetRequiredService<IRepoMoneda>();
+        LoginViewModel.Initialize(repoMoneda);
+        await LoginViewModel.UpdateCriptosAsync();
+    }
+    else
+    {
+        LoginViewModel.CurrentUser = null;
+        LoginViewModel.ResetCriptos();
+    }
+
+    await next();
+});
 
 app.UseAuthorization();
 
