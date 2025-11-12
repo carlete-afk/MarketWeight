@@ -1,4 +1,6 @@
+@using MarketWeight.Core
 @using MarketWeight.MVC.ViewModels.Cuenta
+@model IEnumerable<MarketWeight.Core.Moneda>
 
 @{
     ViewData["Title"] = "Perfil de Usuario";
@@ -18,16 +20,46 @@
             <input type="hidden" name="idUsuario" value="@LoginViewModel.CurrentUser?.IdUsuario" />
             <div class="form-group">
                 <label for="monto" class="label">Monto</label>
-                <input type="number" id="monto" name="monto" required class="input" placeholder="Ingrese el monto" style="max-width: 300px;" />
+                <input type="text" id="monto" name="monto" required class="input" placeholder="Ingrese el monto"
+                    style="max-width: 300px;" />
             </div>
             <button type="submit" class="btn">Ingresar</button>
-            
-            @if (TempData["ErrorMessage"] != null)
+
+            @{
+                var successMessage = TempData["SuccessMessage"] as string;
+                var errorMessage = TempData["ErrorMessage"] as string;
+                var message = successMessage ?? errorMessage;
+                var alertClass = successMessage != null ? "alert-success" : "alert-danger";
+            }
+            @if (message != null)
             {
-                <div class="alert alert-danger">
-                    @TempData["ErrorMessage"]
+                <div class="alert @alertClass">
+                    @message
                 </div>
             }
         </form>
+    </div>
+
+    <div>
+        <h1 class="title">Tabla de Criptos</h1>
+        <table class="datos">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Moneda moneda in LoginViewModel.Criptos)
+                {
+                    <tr>
+                        <td>@moneda.Nombre</td>
+                        <td>@moneda.Precio.ToString("N2")</td>
+                        <td>@moneda.Cantidad.ToString("N2")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>

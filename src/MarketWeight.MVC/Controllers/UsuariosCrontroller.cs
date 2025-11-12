@@ -47,8 +47,8 @@ public class UsuariosController : Controller
         try
         {
             await _repoUsuario.CompraAsync(idusuario, cantidad, idmoneda);
-            TempData["ErrorMessage"] = "Compra realizada correctamente.";
-            return RedirectToAction("Index", "Home");
+            TempData["SuccessMessage"] = "Compra realizada correctamente.";
+            return RedirectToAction("Compra");
         }
         catch (MySqlConnector.MySqlException ex) when (ex.Message.Contains("Saldo Insuficiente"))
         {
@@ -65,6 +65,12 @@ public class UsuariosController : Controller
     [HttpPost]
     public async Task<IActionResult> Deposito(decimal monto)
     {
+        if (monto <= 0)
+        {
+            TempData["ErrorMessage"] = "El monto del depósito debe ser mayor a cero.";
+            return RedirectToAction("Perfil", "Cuenta");
+        }
+            
         if (LoginViewModel.CurrentUser == null)
             return RedirectToAction("Login", "Cuenta");
 
@@ -73,7 +79,7 @@ public class UsuariosController : Controller
         try
         {
             await _repoUsuario.IngresoAsync(idusuario, monto);
-            TempData["ErrorMessage"] = "Deposito realizado correctamente.";
+            TempData["SuccessMessage"] = "Deposito realizado correctamente.";
             return RedirectToAction("Perfil", "Cuenta");
         }
 
