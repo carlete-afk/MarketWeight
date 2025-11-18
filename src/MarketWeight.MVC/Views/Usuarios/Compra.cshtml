@@ -17,13 +17,13 @@
                     <option value="">Seleccione una moneda</option>
                     @foreach (var moneda in Model)
                     {
-                        <option value="@moneda.IdMoneda" data-img="@moneda.Img">@moneda.Nombre</option>
+                        <option value="@moneda.IdMoneda" data-img="@moneda.Img">@moneda.Nombre - ($@moneda.Precio.ToString("N2"))</option>
                     }
                 </select>
             </div>
             <div class="form-group">
                 <label for="cantidad" class="label">Cantidad</label>
-                <input type="number" id="cantidad" name="cantidad" required class="input" placeholder="Cantidad a comprar" />
+                <input type="text"  id="cantidad" name="cantidad" required class="input" placeholder="Cantidad a comprar" />
             </div>
             
             <button type="submit" class="btn">Comprar</button>

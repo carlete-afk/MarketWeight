@@ -35,7 +35,7 @@ public class UsuariosController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Compra(decimal cantidad, uint idmoneda)
+    public async Task<IActionResult> Compra(string cantidad, uint idmoneda)
     {
         if (LoginViewModel.CurrentUser == null)
         {
@@ -46,7 +46,7 @@ public class UsuariosController : Controller
 
         try
         {
-            await _repoUsuario.CompraAsync(idusuario, cantidad, idmoneda);
+            await _repoUsuario.CompraAsync(idusuario, Convert.ToDecimal(cantidad.Replace(".", ",")), idmoneda);
             TempData["SuccessMessage"] = "Compra realizada correctamente.";
             return RedirectToAction("Compra");
         }
