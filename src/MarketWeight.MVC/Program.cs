@@ -2,7 +2,7 @@ using System.Data;
 using MySqlConnector;
 using MarketWeight.Ado.Dapper;
 using MarketWeight.Core.Persistencia;
-using MarketWeight.MVC.ViewModels.Cuenta;
+using MarketWeight.MVC.ViewModels;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -12,6 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IDbConnection>(sp => new MySqlConnection(connectionString));
 builder.Services.AddScoped<IRepoMoneda, RepoMoneda>();
 builder.Services.AddScoped<IRepoUsuario, RepoUsuario>();
+builder.Services.AddScoped<IRepoUsuarioMoneda, RepoUsuarioMoneda>();
 
 var app = builder.Build();
 
@@ -38,7 +39,8 @@ app.Use(async (context, next) =>
             await repoUsuario.DetalleCompletoAsync(userId);
 
         var repoMoneda = context.RequestServices.GetRequiredService<IRepoMoneda>();
-        LoginViewModel.Initialize(repoMoneda);
+        var repoUsuarioMoneda = context.RequestServices.GetRequiredService<IRepoUsuarioMoneda>();
+        LoginViewModel.Initialize(repoMoneda, repoUsuarioMoneda);
         await LoginViewModel.UpdateCriptosAsync();
     }
     else
