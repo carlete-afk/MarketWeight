@@ -1,5 +1,5 @@
 @using MarketWeight.Core
-@using MarketWeight.MVC.ViewModels.Cuenta
+@using MarketWeight.MVC.ViewModels
 @model IEnumerable<MarketWeight.Core.Moneda>
 
 @{
@@ -51,12 +51,12 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (Moneda moneda in LoginViewModel.Criptos)
+                @foreach (CriptoUsuario criptousuario in LoginViewModel.Criptos)
                 {
                     <tr>
-                        <td>@moneda.Nombre</td>
-                        <td>@moneda.Precio.ToString("N2")</td>
-                        <td>@moneda.Cantidad.ToString("N2")</td>
+                        <td>@criptousuario.Nombre</td>
+                        <td>@criptousuario.Precio.ToString("N2")</td>
+                        <td>@criptousuario.Cantidad.ToString("N2")</td>
                     </tr>
                 }
             </tbody>

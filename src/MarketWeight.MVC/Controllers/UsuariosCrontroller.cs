@@ -5,7 +5,7 @@ using MarketWeight.Core;
 using MarketWeight.Ado.Dapper;
 using MarketWeight.Core.Persistencia;
 using System.Reflection.Metadata;
-using MarketWeight.MVC.ViewModels.Cuenta;
+using MarketWeight.MVC.ViewModels;
 
 namespace MarketWeight.MVC.Controllers;
 

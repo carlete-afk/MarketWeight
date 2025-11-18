@@ -5,7 +5,7 @@ using MarketWeight.Core;
 using MarketWeight.Ado.Dapper;
 using MarketWeight.Core.Persistencia;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using MarketWeight.MVC.ViewModels.Cuenta;
+using MarketWeight.MVC.ViewModels;
 using Microsoft.AspNetCore.Http;
 
 namespace MarketWeight.MVC.Controllers;
